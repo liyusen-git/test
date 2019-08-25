@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>留言板</title>
+    <link rel="stylesheet" href="./assets/bootstrap.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="display-1">留言板</h1>
+        <hr>
+        <div id="loading">正在拼命加载数据.....</div>
+        <ul id="messages" class="list-unstyled">
+
+        </ul>
+        <hr>
+        <div class="form-group">
+            <label for="txt_name">称呼：</label>
+            <input class="form-control" id="txt_name" name="xxx" type="text">
+        </div>
+        <div class="form-group">
+            <label for="txt_content">留言：</label>
+            <textarea class="form-control" id="txt_content" cols="80" rows="10"></textarea>
+        </div>
+        <button type="button" id="btn_send" class="btn btn-primary">提交</button>
+    </div>
+
+
+    <!-- <li class="media">
+      <img class="mr-3" src="avatar.png" alt="张三">
+      <div class="media-body">
+        <h4>张三</h4>
+        <p>哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</p>
+      </div>
+    </li> -->
+</body>
+<script>
+    var xhr = new XMLHttpRequest();
+    onload();
+
+    function onload() {
+        xhr.open("get", "/getMsg", true);
+        xhr.send(null);
+        var str = "";
+        xhr.onreadystatechange = function () {
+            if (this.readyState !== 4) {
+                return;
+            }
+            var arr = JSON.parse(this.responseText);
+            arr.forEach(function (ele) {
+                str += `
+            <li class="media">
+                <img class="mr-3" src="avatar.png">
+                    <div class="media-body">
+                    <h4>${ele.name}</h4>
+                    <p>${ele.content}</p>
+                </div>
+            </li>
+            `;
+                document.getElementById("messages").innerHTML = str;
+            })
+        }
+    }
+</script>
+<script>
+    var xhr2 = new XMLHttpRequest();
+    var btn = document.getElementById("btn_send");
+    btn.onclick = function () {
+        var name = document.getElementById("txt_name");
+        var content = document.getElementById("txt_content");
+        xhr2.open("post", "/addMsg");
+        xhr2.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr2.send("name=" + name.value + "&content=" + content.value);
+        xhr2.onreadystatechange = function () {
+            if(this.readyState!==4)
+            {
+                return true;
+            }
+            if (this.responseText === "true") {
+                onload();
+            } else {
+                alert("添加失败");
+            }
+        }
+    }
+</script>
+
+</html>
