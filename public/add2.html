@@ -101,10 +101,11 @@
       // 使用FormData收集表单数据
       // 1. 找到表单的dom对象
       var form = $('form')[0];
+      console.log(form);
       // 2. 实例化FormData对象，并传入表单的dom对象
       var formdata = new FormData(form);
       console.log(formdata);
-      
+      console.log(typeof(formdata));
       // 发送ajax请求，完成添加
       $.ajax({
         type: 'POST',

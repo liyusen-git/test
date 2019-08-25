@@ -152,6 +152,8 @@ app.post('/api/member-add', uploader.single('avatar'), (req, res) => {
   // res.send([req.body, req.file]);
   if (!(req.body.name && req.body.bio && req.file)) {
     return res.status(400).send({ message: '请求参数异常' });
+    // console.log(req.body.name+req.body.bio+req.file);
+    // return res.status(400).send({ message: '请求参数异常'+ req.body.name+req.body.bio+req.file});
   }
 
   const member = {
