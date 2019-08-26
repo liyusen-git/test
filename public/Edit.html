@@ -39,7 +39,7 @@
     </section>
 
     <div class="py-5 bg-light">
-      <form class="container">
+      <!-- <form class="container">
         <div class="row mb-3">
           <div class="col-md-9">
             <div class="form-group">
@@ -63,7 +63,7 @@
           </div>
         </div>
         <button type="button" class="btn btn-primary btn-block">Save</button>
-      </form>
+      </form> -->
     </div>
   </main>
 
@@ -75,7 +75,67 @@
   </footer>
 </body>
 <script src="./assets/jquery.js"></script>
+<script src="./assets/template-web.js"></script>
 <script>
+  //从地址栏获取到id
+    var id=location.search;
+    $.ajax({
+      type:"get",
+      url:"/api/member-detail"+id,
+      success:function(res){
+        // console.log(res);
+        var str= template("content",res);
+        $(".bg-light").append(str);
+      },
+      dataType:"json"
+    })
+</script>
+<script id="content" type="text/html">
+  <form class="container">
+      <div class="row mb-3">
+        <div class="col-md-9">
+          <div class="form-group">
+            <label for="input_name">Member name</label>
+            <input name="name" value="{{name}}" type="text" class="form-control" id="input_name" placeholder="Enter member name">
+          </div>
+          <div class="form-group">
+            <label for="input_bio">Member bio</label>
+            <textarea name="bio" class="form-control" id="input_bio" cols="80" rows="10" placeholder="Enter member bio">{{bio}}</textarea>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label class="w-100" for="input_avatar">
+              <span class="d-block mb-2">Member avatar</span>
+              <img class="img-thumbnail w-100" src="{{avatar}}" alt="Member avatar">
+            </label>
+            <input name="avatar" text="{{avatar}}" value="{{avatar}}" type="file" class="form-control-file" id="input_avatar" aria-describedby="input_avatar_label">
+            <small id="input_avatar_label" class="form-text text-muted">Upload a picture.</small>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary btn-block">Save</button>
+    </form>
+</script>
+<script>
+  $("button").click(function(){
+    //获取到要提交的表单
+    var form=$("form");
+    //创建一个表单对象
+    var formdata=new FormData(form);
+    console.log(formdata);
     
+    $.ajax({
+      type:"post",
+      url:"/api/member-add",
+      data:formdata,
+      success:function(res){
+        console.log(res.message);
+        
+      },
+      contentType:"json"
+
+    })
+  })
 </script>
 </html>
